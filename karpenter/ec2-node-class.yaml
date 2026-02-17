@@ -3,9 +3,10 @@ kind: EC2NodeClass
 metadata:
   name: dev-creato
 spec:
-  amiFamily: AL2
+  role: KarpenterNodeRole-dev-creato-cluster
 
-  role: dev-creato-karpenter-controller
+  amiSelectorTerms:
+    - alias: al2@latest
 
   subnetSelectorTerms:
     - tags:
