@@ -1,40 +1,38 @@
 apiVersion: karpenter.sh/v1beta1
 kind: NodePool
 metadata:
-  name: default
-  namespace: karpenter
+  name: graviton
 spec:
   template:
-    metadata:
-      labels:
-        workload-type: general
     spec:
+      nodeClassRef:
+        name: dev-creato
+
       requirements:
-        - key: karpenter.sh/capacity-type
-          operator: In
-          values: ["on-demand"]
-        - key: kubernetes.io/arch
+        - key: "kubernetes.io/arch"
           operator: In
           values: ["arm64"]
-        - key: node.kubernetes.io/instance-type
+
+        - key: "node.kubernetes.io/instance-type"
           operator: In
-          values: ["t4g.medium"]
-        - key: karpenter.sh/do-not-evict
+          values:
+            - "t4g.medium"
+            - "t4g.large"
+            - "m6g.large"
+            - "c6g.large"
+
+        - key: "karpenter.k8s.aws/instance-generation"
+          operator: Gt
+          values: ["4"]
+
+        - key: "karpenter.k8s.aws/capacity-type"
           operator: In
-          values: ["false"]
-      nodeClassRef:
-        name: default
-      taints:
-        - key: workload-type
-          value: general
-          effect: NoSchedule
+          values: ["on-demand", "spot"]
+
   limits:
-    cpu: 1000
-    memory: 1000Gi
+    cpu: 100
+
   disruption:
-    consolidateAfter: 30s
-    consolidationPolicy: cost
-    expireAfter: 604800s
-    budgets:
-      - nodes: "10%"
-  weight: 100
+    consolidationPolicy: WhenUnderutilized
+    consolidateAfter: 2m
+    expireAfter: 720h

@@ -1,26 +1,19 @@
 apiVersion: karpenter.k8s.aws/v1beta1
 kind: EC2NodeClass
 metadata:
-  name: default
-  namespace: karpenter
+  name: dev-creato
 spec:
   amiFamily: AL2
-  role: "KarpenterNodeRole"
+
+  role: dev-creato-karpenter-controller
+
   subnetSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "true"
+        karpenter.sh/discovery: dev-creato-cluster
+
   securityGroupSelectorTerms:
     - tags:
-        karpenter.sh/discovery: "true"
+        karpenter.sh/discovery: dev-creato-cluster
+
   tags:
-    ManagedBy: "karpenter"
-    Environment: "production"
-  userData: |
-    #!/bin/bash
-    echo "Karpenter managed node launched"
-  blockDeviceMappings:
-    - deviceName: /dev/xvda
-      ebs:
-        volumeSize: 32Gi
-        volumeType: gp3
-        deleteOnTermination: true
+    karpenter.sh/discovery: dev-creato-cluster
