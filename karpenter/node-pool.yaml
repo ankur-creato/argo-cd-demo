@@ -1,4 +1,4 @@
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: graviton
@@ -6,26 +6,24 @@ spec:
   template:
     spec:
       nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
         name: dev-creato
 
       requirements:
-        - key: "kubernetes.io/arch"
+        - key: kubernetes.io/arch
           operator: In
           values: ["arm64"]
 
-        - key: "node.kubernetes.io/instance-type"
+        - key: node.kubernetes.io/instance-type
           operator: In
           values:
-            - "t4g.medium"
-            - "t4g.large"
-            - "m6g.large"
-            - "c6g.large"
+            - t4g.medium
+            - t4g.large
+            - m6g.large
+            - c6g.large
 
-        - key: "karpenter.k8s.aws/instance-generation"
-          operator: Gt
-          values: ["4"]
-
-        - key: "karpenter.k8s.aws/capacity-type"
+        - key: karpenter.k8s.aws/capacity-type
           operator: In
           values: ["on-demand", "spot"]
 
