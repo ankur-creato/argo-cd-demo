@@ -23,7 +23,7 @@ spec:
             - m6g.large
             - c6g.large
 
-        - key: karpenter.k8s.aws/capacity-type
+        - key: karpenter.sh/capacity-type
           operator: In
           values: ["on-demand", "spot"]
 
