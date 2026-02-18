@@ -1,0 +1,39 @@
+{{- if .Values.onDemand.enabled }}
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: {{ .Values.onDemand.name }}
+spec:
+  template:
+    spec:
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["arm64"]
+
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values:
+            {{- toYaml .Values.onDemand.instanceTypes | nindent 12 }}
+
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: {{ .Values.nodeClass.name }}
+
+  limits:
+    cpu: {{ .Values.onDemand.cpuLimit }}
+    memory: {{ .Values.onDemand.memoryLimit }}
+
+  disruption:
+    consolidateAfter: {{ .Values.disruption.consolidateAfter }}
+    consolidationPolicy: {{ .Values.disruption.consolidationPolicy }}
+    budgets:
+      - nodes: {{ .Values.disruption.budgetPercent }}
+
+  weight: {{ .Values.onDemand.weight }}
+{{- end }}

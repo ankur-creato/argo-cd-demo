@@ -1,0 +1,39 @@
+{{- if .Values.spot.enabled }}
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: {{ .Values.spot.name }}
+spec:
+  template:
+    spec:
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot"]
+
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["arm64"]
+
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values:
+            {{- toYaml .Values.spot.instanceTypes | nindent 12 }}
+
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: {{ .Values.nodeClass.name }}
+
+  limits:
+    cpu: {{ .Values.spot.cpuLimit }}
+    memory: {{ .Values.spot.memoryLimit }}
+
+  disruption:
+    consolidateAfter: {{ .Values.disruption.consolidateAfter }}
+    consolidationPolicy: {{ .Values.disruption.consolidationPolicy }}
+    budgets:
+      - nodes: {{ .Values.disruption.budgetPercent }}
+
+  weight: {{ .Values.spot.weight }}
+{{- end }}

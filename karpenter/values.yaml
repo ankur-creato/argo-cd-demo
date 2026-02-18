@@ -1,0 +1,36 @@
+clusterName: dev-creato-cluster
+nodeIamRoleName: dev-creato-eks-node-role
+
+nodeClass:
+  name: default
+  amiFamily: AL2023
+  amiAlias: al2023@latest
+
+spot:
+  enabled: true
+  name: default-spot
+  weight: 100
+  cpuLimit: "64"
+  memoryLimit: "128Gi"
+  instanceTypes:
+    - t4g.large
+    - t4g.medium
+    - t4g.small
+    - t4g.micro
+
+onDemand:
+  enabled: true
+  name: default-on-demand
+  weight: 1
+  cpuLimit: "32"
+  memoryLimit: "64Gi"
+  instanceTypes:
+    - t4g.large
+    - t4g.medium
+    - t4g.small
+    - t4g.micro
+
+disruption:
+  consolidateAfter: 30s
+  consolidationPolicy: WhenEmptyOrUnderutilized
+  budgetPercent: "10%"
