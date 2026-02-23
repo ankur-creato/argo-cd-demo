@@ -1,0 +1,6 @@
+apiVersion: v2
+name: external-secrets-manifest
+description: Helm chart to deploy External Secrets resources using EKS Pod Identity
+type: application
+version: 0.1.0
+appVersion: "1.0"

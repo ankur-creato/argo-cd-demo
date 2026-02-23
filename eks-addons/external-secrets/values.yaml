@@ -1,0 +1,16 @@
+aws:
+  region: ap-south-1
+
+secretStore:
+  name: aws-secret-store
+
+serviceAccount:
+  name: external-secrets-sa
+
+externalSecret:
+  name: my-app-secret
+  namespace: default
+  refreshInterval: 1h
+  secretName: my-app-k8s-secret
+  awsSecretName: my-app-prod-secret
+  awsSecretKey: password
